@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Upload, Video, Clock, CheckCircle, AlertCircle, MessageSquare, X } from 'lucide-react';
+import { DualVideoPlayer } from '@/components/DualVideoPlayer';
 
 interface UploadedVideo {
   id: string;
@@ -12,6 +13,7 @@ interface UploadedVideo {
   thumbnail: string;
   feedback?: string;
   trainerName?: string;
+  videoUrl?: string;
 }
 
 const mockVideos: UploadedVideo[] = [
@@ -23,6 +25,7 @@ const mockVideos: UploadedVideo[] = [
     thumbnail: 'https://images.unsplash.com/photo-1555597673-b21d5c935865?w=400&h=300&fit=crop',
     feedback: 'Ótima execução! Seu posicionamento de quadril está excelente. Concentre-se em controlar o braço com mais firmeza antes de estender. Além disso, tente quebrar a postura deles mais cedo na sequência.',
     trainerName: 'Marcus Silva',
+    videoUrl: 'cam1-teto',
   },
   {
     id: '2',
@@ -30,6 +33,7 @@ const mockVideos: UploadedVideo[] = [
     uploadDate: '2025-11-23',
     status: 'in-review',
     thumbnail: 'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=400&h=300&fit=crop',
+    videoUrl: 'cam2',
   },
   {
     id: '3',
@@ -39,6 +43,7 @@ const mockVideos: UploadedVideo[] = [
     thumbnail: 'https://images.unsplash.com/photo-1517438476312-10d79c077509?w=400&h=300&fit=crop',
     feedback: 'Bom controle com os pés nos bíceps. Trabalhe em manter mais tensão nas pegadas. Lembre-se de inclinar seu corpo mais para criar melhores oportunidades de desequilíbrio.',
     trainerName: 'Ana Rodriguez',
+    videoUrl: 'cam3',
   },
 ];
 
@@ -132,7 +137,7 @@ export default function VideosPage() {
                   onClick={() => setSelectedVideo(video)}
                   className="bg-gray-900/50 border border-blue-900/30 rounded-xl p-4 hover:border-blue-600/50 transition-colors cursor-pointer flex gap-4"
                 >
-                  <div className="w-32 h-24 bg-black rounded-lg flex-shrink-0 overflow-hidden relative">
+                  <div className="w-32 h-24 bg-black rounded-lg shrink-0 overflow-hidden relative">
                     <Image src={video.thumbnail} alt={video.title} fill className="object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -171,7 +176,7 @@ export default function VideosPage() {
         </div>
 
         <div className="lg:col-span-1">
-          <div className="bg-gray-900/50 border border-blue-900/30 rounded-2xl p-6 sticky top-8">
+          <div className="bg-gray-900/50 border border-blue-900/30 rounded-2xl p-6 sticky top-8 space-y-4">
             {selectedVideo ? (
               <div>
                 <div className="flex justify-between items-start mb-4">
@@ -184,9 +189,21 @@ export default function VideosPage() {
                   </button>
                 </div>
 
-                <div className="aspect-video bg-black rounded-lg mb-4 flex items-center justify-center border border-blue-900/30 overflow-hidden relative">
-                  <Image src={selectedVideo.thumbnail} alt={selectedVideo.title} fill className="object-cover" />
-                </div>
+                {/* Dual Video Player */}
+                {selectedVideo.videoUrl && (
+                  <div className="mb-4 rounded-lg overflow-hidden border border-blue-900/30">
+                    <DualVideoPlayer
+                      videoUrls={['cam1-teto', 'cam2']}
+                      videoLabels={['Câmera 1 (Teto)', 'Câmera 2']}
+                    />
+                  </div>
+                )}
+
+                {!selectedVideo.videoUrl && (
+                  <div className="aspect-video bg-black rounded-lg mb-4 flex items-center justify-center border border-blue-900/30 overflow-hidden relative">
+                    <Image src={selectedVideo.thumbnail} alt={selectedVideo.title} fill className="object-cover" />
+                  </div>
+                )}
 
                 <div className="mb-4 flex items-center gap-2">
                   {selectedVideo.status === 'reviewed' && (

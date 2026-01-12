@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from 'react';
-import { Check, Lock, Play, ChevronRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Check, Lock, Play, ChevronRight, X } from 'lucide-react';
 
 interface Lesson {
   id: string;
@@ -60,6 +61,18 @@ const mockModules: Module[] = [
 
 export default function CoursesPage() {
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+  const [showPlayerModal, setShowPlayerModal] = useState(false);
+  const router = useRouter();
+
+  const handleStartLesson = () => {
+    if (!selectedLesson || selectedLesson.locked) return;
+    setShowPlayerModal(true);
+  };
+
+  const goToPlayer = () => {
+    setShowPlayerModal(false);
+    router.push('/home/player');
+  };
 
   return (
     <div>
@@ -131,7 +144,10 @@ export default function CoursesPage() {
                   <Play className="w-16 h-16 text-blue-400" />
                 </div>
                 <div className="text-gray-400 mb-4">Duração: {selectedLesson.duration}</div>
-                <button className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors flex items-center justify-center gap-2">
+                <button
+                  onClick={handleStartLesson}
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors flex items-center justify-center gap-2"
+                >
                   <Play className="w-5 h-5" />
                   {selectedLesson.completed ? 'Reassistir Aula' : 'Iniciar Aula'}
                 </button>
@@ -150,6 +166,39 @@ export default function CoursesPage() {
           </div>
         </div>
       </div>
+
+      {showPlayerModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
+          <div className="w-full max-w-md rounded-2xl bg-gray-900 border border-blue-900/40 shadow-2xl p-6 relative">
+            <button
+              className="absolute top-3 right-3 text-gray-400 hover:text-white"
+              onClick={() => setShowPlayerModal(false)}
+              aria-label="Fechar"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <div className="mb-4 text-blue-400 text-sm font-medium">Assistir aula</div>
+            <h3 className="text-xl mb-2">Abrir Player</h3>
+            <p className="text-gray-400 mb-6">
+              Vamos levar você para o player dedicado com múltiplas câmeras para esta aula.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button
+                className="px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800"
+                onClick={() => setShowPlayerModal(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
+                onClick={goToPlayer}
+              >
+                Assistir aula
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
