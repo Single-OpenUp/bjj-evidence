@@ -60,7 +60,7 @@ export const DualVideoPlayer = ({
           return url;
         }
         // Otherwise treat it as a filename and build HLS URL
-        return buildHlsMasterSrc(url.split("/").pop() || url);
+        return buildHlsMasterSrc(url.split("/").pop() || url, "aula-1");
       }),
     [videoUrls]
   );

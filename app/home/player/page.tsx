@@ -89,7 +89,7 @@ export default function PlayerPage() {
 
     cameras.forEach((camera, index) => {
       if (indexesToLoad.includes(index)) {
-        const src = buildHlsMasterSrc(camera.file.slug);
+        const src = buildHlsMasterSrc(camera.file.slug, selectedAula);
         attachStream(index, src);
       }
     });
