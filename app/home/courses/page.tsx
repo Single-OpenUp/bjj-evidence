@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Check, Lock, Play, ChevronRight, X } from 'lucide-react';
+import { useAula } from '@/contexts/AulaContext';
+import { Check, Lock, Play, ChevronRight } from 'lucide-react';
 
 interface Lesson {
   id: string;
@@ -10,6 +11,7 @@ interface Lesson {
   duration: string;
   completed: boolean;
   locked: boolean;
+  targetAula: string;
 }
 
 interface Module {
@@ -22,55 +24,25 @@ interface Module {
 
 const mockModules: Module[] = [
   {
-    id: '1',
-    title: 'Fundamentos',
-    description: 'Técnicas e posições essenciais para iniciantes',
-    belt: 'Faixa Branca',
+    id: 'trial',
+    title: 'Trial de Quedas',
+    description: 'Experimente duas aulas essenciais focadas em quedas seguras e eficientes',
+    belt: 'Acesso de Teste',
     lessons: [
-      { id: '1-1', title: 'Introdução ao BJJ', duration: '15 min', completed: true, locked: false },
-      { id: '1-2', title: 'Posições Básicas', duration: '25 min', completed: true, locked: false },
-      { id: '1-3', title: 'Shrimping & Movimentos de Quadril', duration: '20 min', completed: false, locked: false },
-      { id: '1-4', title: 'Fundamentos da Guarda Fechada', duration: '30 min', completed: false, locked: false },
-    ],
-  },
-  {
-    id: '2',
-    title: 'Técnicas de Guarda',
-    description: 'Domine a posição de guarda e raspagens',
-    belt: 'Faixa Azul',
-    lessons: [
-      { id: '2-1', title: 'Conceitos de Guarda Aberta', duration: '28 min', completed: false, locked: false },
-      { id: '2-2', title: 'Guarda Aranha', duration: '35 min', completed: false, locked: false },
-      { id: '2-3', title: 'Guarda De La Riva', duration: '32 min', completed: false, locked: true },
-      { id: '2-4', title: 'Retenção de Guarda', duration: '30 min', completed: false, locked: true },
-    ],
-  },
-  {
-    id: '3',
-    title: 'Finalizações',
-    description: 'Aprenda técnicas eficazes de finalização',
-    belt: 'Faixa Azul',
-    lessons: [
-      { id: '3-1', title: 'Armbar da Guarda', duration: '22 min', completed: false, locked: true },
-      { id: '3-2', title: 'Triângulo', duration: '25 min', completed: false, locked: true },
-      { id: '3-3', title: 'Kimura', duration: '20 min', completed: false, locked: true },
-      { id: '3-4', title: 'Mata Leão', duration: '18 min', completed: false, locked: true },
+      { id: 'trial-1', title: 'Base, postura e entrada para quedas', duration: '1:48 min', completed: false, locked: false, targetAula: 'aula-1' },
+      { id: 'trial-2', title: 'Arm-drag', duration: '1:39 min', completed: false, locked: false, targetAula: 'aula-2' },
     ],
   },
 ];
 
 export default function CoursesPage() {
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
-  const [showPlayerModal, setShowPlayerModal] = useState(false);
+  const { setSelectedAula } = useAula();
   const router = useRouter();
 
   const handleStartLesson = () => {
     if (!selectedLesson || selectedLesson.locked) return;
-    setShowPlayerModal(true);
-  };
-
-  const goToPlayer = () => {
-    setShowPlayerModal(false);
+    setSelectedAula(selectedLesson.targetAula);
     router.push('/home/player');
   };
 
@@ -166,39 +138,6 @@ export default function CoursesPage() {
           </div>
         </div>
       </div>
-
-      {showPlayerModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-4">
-          <div className="w-full max-w-md rounded-2xl bg-gray-900 border border-blue-900/40 shadow-2xl p-6 relative">
-            <button
-              className="absolute top-3 right-3 text-gray-400 hover:text-white"
-              onClick={() => setShowPlayerModal(false)}
-              aria-label="Fechar"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <div className="mb-4 text-blue-400 text-sm font-medium">Assistir aula</div>
-            <h3 className="text-xl mb-2">Abrir Player</h3>
-            <p className="text-gray-400 mb-6">
-              Vamos levar você para o player dedicado com múltiplas câmeras para esta aula.
-            </p>
-            <div className="flex gap-3 justify-end">
-              <button
-                className="px-4 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800"
-                onClick={() => setShowPlayerModal(false)}
-              >
-                Cancelar
-              </button>
-              <button
-                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
-                onClick={goToPlayer}
-              >
-                Assistir aula
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

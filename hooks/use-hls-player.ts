@@ -81,11 +81,13 @@ export const useHLSPlayer = ({ cameras, videoRefs, activeIndex }: UseHLSPlayerPr
         const hls = new HlsConstructor({
           enableWorker: true,
           lowLatencyMode: false,
-          startLevel: -1,
+          startLevel: 0,
           capLevelToPlayerSize: true,
-          maxBufferLength: 30,
-          maxMaxBufferLength: 60,
-          backBufferLength: 10,
+          maxBufferLength: 15,
+          maxMaxBufferLength: 30,
+          backBufferLength: 5,
+          maxLoadingDelay: 4,
+          maxBufferHole: 0.5,
           liveSyncDurationCount: 3,
           liveMaxLatencyDurationCount: 10,
           xhrSetup: (xhr: XMLHttpRequest) => {

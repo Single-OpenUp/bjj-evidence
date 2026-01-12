@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { buildCameraList, getCamerasForAula } from "@/utils/camera-config";
 import { buildHlsMasterSrc } from "@/utils/video-sources";
 import { useAula } from "@/contexts/AulaContext";
@@ -11,12 +12,12 @@ import { useVideoSync } from "@/hooks/use-video-sync";
 import { CameraSelector } from "@/components/CameraSelector";
 import { Header } from "@/components/Header";
 import { Video } from "@/components/Video";
-import { AulaSelector } from "@/components/AulaSelector";
 
 export default function PlayerPage() {
   const { selectedAula } = useAula();
   const [activeIndex, setActiveIndex] = useState(0);
   const [volume, setVolume] = useState(50);
+  const router = useRouter();
 
   const videoContainerRef = useRef<HTMLDivElement | null>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
@@ -107,8 +108,14 @@ export default function PlayerPage() {
       <main className="mx-auto flex w-full max-w-full flex-col gap-6">
         <Header />
 
-        {/* Aula Selector */}
-        <AulaSelector />
+        <div className="flex">
+          <button
+            onClick={() => router.push("/home/courses")}
+            className="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-700 transition-colors"
+          >
+            Voltar para cursos
+          </button>
+        </div>
 
         <div className="flex flex-row gap-8 flex-nowrap items-stretch" key={selectedAula}>
           {/* Camera Selector */}
