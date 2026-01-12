@@ -88,6 +88,9 @@ export const useHLSPlayer = ({ cameras, videoRefs, activeIndex }: UseHLSPlayerPr
           backBufferLength: 10,
           liveSyncDurationCount: 3,
           liveMaxLatencyDurationCount: 10,
+          xhrSetup: (xhr: XMLHttpRequest) => {
+            xhr.withCredentials = false;
+          },
         });
         hlsInstances.current[index] = hls;
         hls.attachMedia(video);

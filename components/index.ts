@@ -7,3 +7,4 @@ export { Video } from "./Video";
 export { VideoPlayer } from "./VideoPlayer";
 export { VideoHUD } from "./VideoHUD";
 export { VolumeControl } from "./VolumeControl";
+export { AulaSelector } from "./AulaSelector";

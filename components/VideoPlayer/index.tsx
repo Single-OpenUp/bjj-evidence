@@ -22,6 +22,7 @@ export const VideoPlayer = ({ cameras, activeIndex, videoRefs }: VideoPlayerProp
           autoPlay
           playsInline
           muted={index !== activeIndex}
+          crossOrigin="anonymous"
           data-camera-name={camera.name}
         />
       ))}
